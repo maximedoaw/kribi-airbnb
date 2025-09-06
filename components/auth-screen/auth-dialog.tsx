@@ -18,6 +18,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Separator } from "@/components/ui/separator"
 import { User, Mail, Lock, Phone } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import { auth, db } from "@/lib/firebase"
+import { useAuthState, useSignInWithEmailAndPassword, useCreateUserWithEmailAndPassword, useSignInWithGoogle } from "react-firebase-hooks/auth"
+import { doc, serverTimestamp, setDoc } from "firebase/firestore"
 
 interface AuthDialogProps {
   children: React.ReactNode
@@ -27,32 +30,61 @@ export function AuthDialog({ children }: AuthDialogProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [isGoogleLoading, setIsGoogleLoading] = useState(false)
+  const [user] = useAuthState(auth)
+  const [signInWithEmailAndPassword, , loadingLogin, errorLogin] = useSignInWithEmailAndPassword(auth)
+  const [createUserWithEmailAndPassword, , loadingRegister, errorRegister] = useCreateUserWithEmailAndPassword(auth)
+  const [signInWithGoogle, , loadingGoogle, errorGoogle] = useSignInWithGoogle(auth)
   const { toast } = useToast()
 
   const handleAuth = async (type: "login" | "register") => {
-    setIsLoading(true)
-    // TODO: Implement Firebase authentication
-    setTimeout(() => {
-      setIsLoading(false)
+    try {
+      setIsLoading(true)
+      const emailInput = (document.getElementById(type === 'login' ? 'email' : 'register-email') as HTMLInputElement | null)?.value || ''
+      const passwordInput = (document.getElementById(type === 'login' ? 'password' : 'register-password') as HTMLInputElement | null)?.value || ''
+      if (!emailInput || !passwordInput) {
+        toast({ title: "Champs requis", description: "Email et mot de passe sont requis." })
+        return
+      }
+      if (type === 'login') {
+        await signInWithEmailAndPassword(emailInput, passwordInput)
+        toast({ title: "Connexion réussie !", description: "Bienvenue sur Kribi Apartments" })
+      } else {
+        const res = await createUserWithEmailAndPassword(emailInput, passwordInput)
+        if (res?.user) {
+          await setDoc(doc(db, 'users', res.user.uid), {
+            email: res.user.email,
+            role: 'user',
+            createdAt: serverTimestamp(),
+          }, { merge: true })
+        }
+        toast({ title: "Inscription réussie !", description: "Bienvenue sur Kribi Apartments" })
+      }
       setIsOpen(false)
-      toast({
-        title: type === "login" ? "Connexion réussie !" : "Inscription réussie !",
-        description: "Bienvenue sur Kribi Apartments",
-      })
-    }, 2000)
+    } catch (e: any) {
+      toast({ title: "Erreur", description: e?.message ?? 'Une erreur est survenue' })
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleGoogleAuth = async () => {
-    setIsGoogleLoading(true)
-    // TODO: Implement Firebase Google authentication
-    setTimeout(() => {
-      setIsGoogleLoading(false)
+    try {
+      setIsGoogleLoading(true)
+      const res = await signInWithGoogle()
+      if (res?.user) {
+        await setDoc(doc(db, 'users', res.user.uid), {
+          email: res.user.email,
+          role: 'user',
+          createdAt: serverTimestamp(),
+        }, { merge: true })
+      }
       setIsOpen(false)
-      toast({
-        title: "Connexion Google réussie !",
-        description: "Bienvenue sur Kribi Apartments",
-      })
-    }, 2000)
+      toast({ title: "Connexion Google réussie !", description: "Bienvenue sur Kribi Apartments" })
+    } catch (e: any) {
+      toast({ title: "Erreur", description: e?.message ?? 'Une erreur est survenue' })
+    } finally {
+      setIsGoogleLoading(false)
+    }
   }
 
   return (
@@ -69,7 +101,7 @@ export function AuthDialog({ children }: AuthDialogProps) {
         <div className="space-y-4">
           <Button
             onClick={handleGoogleAuth}
-            disabled={isGoogleLoading}
+            disabled={isGoogleLoading || loadingGoogle}
             variant="outline"
             className="w-full h-12 border-2 hover:bg-gray-50 bg-transparent"
           >
@@ -91,7 +123,7 @@ export function AuthDialog({ children }: AuthDialogProps) {
                 d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
               />
             </svg>
-            {isGoogleLoading ? "Connexion..." : "Continuer avec Google"}
+            {isGoogleLoading || loadingGoogle ? "Connexion..." : "Continuer avec Google"}
           </Button>
 
           <div className="relative">
@@ -128,9 +160,9 @@ export function AuthDialog({ children }: AuthDialogProps) {
             <Button
               onClick={() => handleAuth("login")}
               className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-lg h-12"
-              disabled={isLoading}
+              disabled={isLoading || loadingLogin}
             >
-              {isLoading ? "Connexion..." : "Se connecter"}
+              {isLoading || loadingLogin ? "Connexion..." : "Se connecter"}
             </Button>
             <div className="text-center">
               <Button variant="link" className="text-sm text-muted-foreground">
@@ -171,9 +203,9 @@ export function AuthDialog({ children }: AuthDialogProps) {
             <Button
               onClick={() => handleAuth("register")}
               className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white shadow-lg h-12"
-              disabled={isLoading}
+              disabled={isLoading || loadingRegister}
             >
-              {isLoading ? "Inscription..." : "S'inscrire"}
+              {isLoading || loadingRegister ? "Inscription..." : "S'inscrire"}
             </Button>
             <p className="text-xs text-center text-muted-foreground">
               En vous inscrivant, vous acceptez nos{" "}

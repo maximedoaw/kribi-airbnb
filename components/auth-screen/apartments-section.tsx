@@ -1,18 +1,30 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
-import { AuthDialog } from "@/components/auth-screen/auth-dialog"
-import { useRef, useEffect } from "react"
-import { gsap } from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
-import { Star, Heart, Wifi, Car, Utensils, Shield } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { AuthDialog } from "@/components/auth-screen/auth-dialog";
+import { useRef, useEffect, useState } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Star, Heart, Wifi, Car, Utensils, Shield, MapPin, Users, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 
 if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger)
+  gsap.registerPlugin(ScrollTrigger);
 }
 
 const starApartments = [
@@ -24,8 +36,14 @@ const starApartments = [
     reviews: 127,
     image: "/placeholder.svg?height=300&width=400",
     features: ["Vue mer", "Piscine", "WiFi", "Parking"],
-    description: "Villa luxueuse face à l'océan avec piscine privée et terrasse panoramique",
-    amenities: ["Piscine privée", "Terrasse", "Cuisine équipée", "Parking sécurisé"],
+    description:
+      "Villa luxueuse face à l'océan avec piscine privée et terrasse panoramique",
+    amenities: [
+      "Piscine privée",
+      "Terrasse",
+      "Cuisine équipée",
+      "Parking sécurisé",
+    ],
     category: "villa",
   },
   {
@@ -36,8 +54,14 @@ const starApartments = [
     reviews: 89,
     image: "/placeholder.svg?height=300&width=400",
     features: ["Centre-ville", "Climatisé", "WiFi", "Balcon"],
-    description: "Appartement moderne au cœur de Kribi, proche de tous les commerces",
-    amenities: ["Climatisation", "Balcon", "WiFi haut débit", "Proche commerces"],
+    description:
+      "Appartement moderne au cœur de Kribi, proche de tous les commerces",
+    amenities: [
+      "Climatisation",
+      "Balcon",
+      "WiFi haut débit",
+      "Proche commerces",
+    ],
     category: "apartment",
   },
   {
@@ -49,7 +73,12 @@ const starApartments = [
     image: "/placeholder.svg?height=300&width=400",
     features: ["Accès plage", "Terrasse", "Cuisine", "Jardin"],
     description: "Bungalow authentique à 50m de la plage avec jardin tropical",
-    amenities: ["Accès direct plage", "Jardin tropical", "Cuisine complète", "Terrasse privée"],
+    amenities: [
+      "Accès direct plage",
+      "Jardin tropical",
+      "Cuisine complète",
+      "Terrasse privée",
+    ],
     category: "bungalow",
   },
   {
@@ -60,8 +89,14 @@ const starApartments = [
     reviews: 203,
     image: "/placeholder.svg?height=300&width=400",
     features: ["Vue marina", "Jacuzzi", "WiFi", "Service"],
-    description: "Suite de luxe avec vue sur la marina et services haut de gamme",
-    amenities: ["Jacuzzi privé", "Vue marina", "Service conciergerie", "Mini-bar"],
+    description:
+      "Suite de luxe avec vue sur la marina et services haut de gamme",
+    amenities: [
+      "Jacuzzi privé",
+      "Vue marina",
+      "Service conciergerie",
+      "Mini-bar",
+    ],
     category: "villa",
   },
   {
@@ -88,10 +123,13 @@ const starApartments = [
     amenities: ["Jardin privé", "Piscine partagée", "Espace BBQ", "Parking"],
     category: "bungalow",
   },
-]
+];
 
 export function ApartmentsSection() {
-  const apartmentsRef = useRef<HTMLElement>(null)
+  const apartmentsRef = useRef<HTMLElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -109,8 +147,8 @@ export function ApartmentsSection() {
             trigger: apartmentsRef.current,
             start: "top 70%",
           },
-        },
-      )
+        }
+      );
 
       gsap.to(".floating-badge", {
         y: -10,
@@ -118,118 +156,181 @@ export function ApartmentsSection() {
         ease: "sine.inOut",
         yoyo: true,
         repeat: -1,
-      })
-    })
+      });
 
-    return () => ctx.revert()
-  }, [])
+      // Animation pour les cartes au survol
+      gsap.set(".apartment-card", {
+        transformOrigin: "center center",
+      });
+    });
+
+    return () => ctx.revert();
+  }, []);
+
+  // Fonction pour la navigation tactile
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    setStartX(e.pageX - (e.currentTarget as HTMLElement).offsetLeft);
+    setScrollLeft((e.currentTarget as HTMLElement).scrollLeft);
+  };
+
+  const handleMouseLeave = (e: React.MouseEvent) => {
+    setIsDragging(false);
+  };
+
+  const handleMouseUp = (e: React.MouseEvent) => {
+    setIsDragging(false);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - (e.currentTarget as HTMLElement).offsetLeft;
+    const walk = (x - startX) * 2;
+    (e.currentTarget as HTMLElement).scrollLeft = scrollLeft - walk;
+  };
 
   return (
-    <section ref={apartmentsRef} className="py-20">
+    <section ref={apartmentsRef} className="py-20 bg-gradient-to-br from-orange-50/30 via-white to-orange-50/20">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <Badge className="floating-badge mb-4 bg-yellow-100 text-yellow-700">⭐ Sélection premium</Badge>
-          <h3 className="text-4xl font-bold text-foreground mb-6">Nos appartements étoiles</h3>
+          <Badge className="floating-badge mb-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg border-0">
+            ⭐ Sélection premium
+          </Badge>
+          <h3 className="text-4xl font-bold mb-6 bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+            Nos appartements étoiles
+          </h3>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Découvrez notre sélection d'appartements les mieux notés par nos clients
+            Découvrez notre sélection d'appartements les mieux notés par nos
+            clients
           </p>
         </div>
 
-        <Tabs defaultValue="all" className="mb-8">
-          <TabsList className="grid w-full max-w-md mx-auto grid-cols-4">
-            <TabsTrigger value="all">Tous</TabsTrigger>
-            <TabsTrigger value="villa">Villas</TabsTrigger>
-            <TabsTrigger value="apartment">Apparts</TabsTrigger>
-            <TabsTrigger value="bungalow">Bungalows</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="all" className="mt-8">
-            <Carousel className="w-full max-w-6xl mx-auto">
-              <CarouselContent className="-ml-2 md:-ml-4">
-                {starApartments.map((apartment, index) => (
-                  <CarouselItem key={apartment.id} className="apartment-card pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3">
-                    <Card className="overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border-0 shadow-lg bg-gradient-to-br from-white to-orange-50/30 hover:scale-105">
-                      <div className="relative">
-                        <img
-                          src={apartment.image || "/placeholder.svg"}
-                          alt={apartment.name}
-                          className="w-full h-56 object-cover"
-                        />
-                        <div className="absolute top-4 right-4 flex gap-2">
-                          <Badge className="bg-white/95 text-gray-800 shadow-lg backdrop-blur">
-                            <Star className="h-3 w-3 mr-1 fill-yellow-400 text-yellow-400" />
-                            {apartment.rating}
-                          </Badge>
-                          <Button
-                            size="icon"
-                            variant="secondary"
-                            className="h-8 w-8 bg-white/95 hover:bg-white backdrop-blur hover:scale-110 transition-all duration-300"
-                          >
-                            <Heart className="h-4 w-4" />
-                          </Button>
-                        </div>
-                        <div className="absolute bottom-4 left-4">
-                          <Badge className="bg-orange-500 text-white shadow-lg">
-                            {apartment.category === "villa"
-                              ? "🏖️ Villa"
-                              : apartment.category === "apartment"
-                                ? "🏢 Appartement"
-                                : "🏡 Bungalow"}
-                          </Badge>
-                        </div>
+        <div className="relative">
+          <Carousel className="w-full max-w-7xl mx-auto">
+            <CarouselContent 
+              className="-ml-2 md:-ml-4 cursor-grab active:cursor-grabbing"
+              onMouseDown={handleMouseDown}
+              onMouseLeave={handleMouseLeave}
+              onMouseUp={handleMouseUp}
+              onMouseMove={handleMouseMove}
+              style={{ userSelect: 'none' }}
+            >
+              {starApartments.map((apartment, index) => (
+                <CarouselItem
+                  key={apartment.id}
+                  className="apartment-card pl-2 md:pl-4 md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+                >
+                  <Card className="group overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border-0 shadow-xl bg-gradient-to-br from-white via-orange-50/30 to-white hover:scale-105 rounded-xl backdrop-blur-sm h-full">
+                    <div className="relative overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent z-10" />
+                      <img
+                        src={apartment.image || "/placeholder.svg"}
+                        alt={apartment.name}
+                        className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-700"
+                      />
+                      <div className="absolute top-3 right-3 flex gap-2 z-20">
+                        <Badge className="bg-white/95 text-gray-800 shadow-lg backdrop-blur border-0 text-xs px-2 py-1">
+                          <Star className="h-3 w-3 mr-1 fill-yellow-400 text-yellow-400" />
+                          {apartment.rating}
+                        </Badge>
+                        <Button
+                          size="icon"
+                          variant="secondary"
+                          className="h-7 w-7 bg-white/95 hover:bg-red-500 hover:text-white backdrop-blur hover:scale-110 transition-all duration-300 shadow-lg"
+                        >
+                          <Heart className="h-3 w-3" />
+                        </Button>
                       </div>
-                      <CardHeader className="pb-4">
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <CardTitle className="text-xl mb-2">{apartment.name}</CardTitle>
-                            <CardDescription className="text-sm leading-relaxed">
-                              {apartment.description}
-                            </CardDescription>
-                          </div>
-                        </div>
+                      <div className="absolute bottom-3 left-3 z-20">
+                        <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg border-0 text-xs px-2 py-1">
+                          {apartment.category === "villa"
+                            ? "🏖️ Villa"
+                            : apartment.category === "apartment"
+                            ? "🏢 Appartement"
+                            : "🏡 Bungalow"}
+                        </Badge>
+                      </div>
+                    </div>
+                    
+                    <CardHeader className="pb-3 pt-4">
+                      <CardTitle className="text-lg mb-2 text-gray-800 group-hover:text-orange-600 transition-colors duration-300 line-clamp-1">
+                        {apartment.name}
+                      </CardTitle>
+                      <CardDescription className="text-sm text-gray-600 mb-3 line-clamp-2 leading-relaxed">
+                        {apartment.description}
+                      </CardDescription>
+                      
+                      <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                           <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                          <span>{apartment.rating}</span>
-                          <span>•</span>
+                          <span className="font-medium">{apartment.rating}</span>
+                          <span className="text-orange-400">•</span>
                           <span>{apartment.reviews} avis</span>
                         </div>
-                      </CardHeader>
-                      <CardContent className="pt-0">
-                        <div className="flex justify-between items-center mb-4">
-                          <span className="text-2xl font-bold text-orange-600">{apartment.price}</span>
-                          <span className="text-sm text-muted-foreground">par nuit</span>
-                        </div>
+                        <span className="text-lg font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">
+                          {apartment.price}
+                        </span>
+                      </div>
+                    </CardHeader>
+                    
+                    <CardContent className="pt-0">
+                      <div className="grid grid-cols-2 gap-2 mb-4">
+                        {apartment.amenities.slice(0, 4).map((amenity, index) => (
+                          <div
+                            key={index}
+                            className="flex items-center gap-2 text-xs text-gray-600 bg-gray-50 px-2 py-1.5 rounded-md group-hover:bg-orange-50 transition-colors duration-300"
+                          >
+                            {amenity.includes("WiFi") && (
+                              <Wifi className="h-3 w-3 text-blue-500" />
+                            )}
+                            {amenity.includes("Parking") && (
+                              <Car className="h-3 w-3 text-gray-500" />
+                            )}
+                            {amenity.includes("Cuisine") && (
+                              <Utensils className="h-3 w-3 text-green-500" />
+                            )}
+                            {!amenity.includes("WiFi") &&
+                              !amenity.includes("Parking") &&
+                              !amenity.includes("Cuisine") && (
+                                <Shield className="h-3 w-3 text-orange-500" />
+                              )}
+                            <span className="truncate">{amenity}</span>
+                          </div>
+                        ))}
+                      </div>
 
-                        <div className="grid grid-cols-2 gap-2 mb-4">
-                          {apartment.amenities.map((amenity, index) => (
-                            <div key={index} className="flex items-center gap-2 text-sm text-muted-foreground">
-                              {amenity.includes("WiFi") && <Wifi className="h-3 w-3 text-blue-500" />}
-                              {amenity.includes("Parking") && <Car className="h-3 w-3 text-gray-500" />}
-                              {amenity.includes("Cuisine") && <Utensils className="h-3 w-3 text-green-500" />}
-                              {!amenity.includes("WiFi") &&
-                                !amenity.includes("Parking") &&
-                                !amenity.includes("Cuisine") && <Shield className="h-3 w-3 text-orange-500" />}
-                              <span className="truncate">{amenity}</span>
-                            </div>
-                          ))}
-                        </div>
-
-                        <AuthDialog>
-                          <Button className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-                            Réserver maintenant
-                          </Button>
-                        </AuthDialog>
-                      </CardContent>
-                    </Card>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious className="hidden md:flex" />
-              <CarouselNext className="hidden md:flex" />
-            </Carousel>
-          </TabsContent>
-        </Tabs>
+                      <AuthDialog>
+                        <Button className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 rounded-lg font-medium py-2">
+                          Réserver maintenant
+                        </Button>
+                      </AuthDialog>
+                    </CardContent>
+                  </Card>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            
+            {/* Flèches de navigation personnalisées */}
+            <div className="absolute -left-4 top-1/2 -translate-y-1/2 z-30">
+              <CarouselPrevious className="h-12 w-12 bg-white/90 hover:bg-white shadow-lg border-0 hover:scale-110 transition-all duration-300" />
+            </div>
+            <div className="absolute -right-4 top-1/2 -translate-y-1/2 z-30">
+              <CarouselNext className="h-12 w-12 bg-white/90 hover:bg-white shadow-lg border-0 hover:scale-110 transition-all duration-300" />
+            </div>
+          </Carousel>
+          
+          {/* Indicateurs de navigation améliorés */}
+          <div className="flex justify-center mt-8 gap-2">
+            {starApartments.map((_, index) => (
+              <div
+                key={index}
+                className="w-3 h-3 rounded-full bg-orange-200 hover:bg-orange-400 transition-colors duration-300 cursor-pointer"
+              />
+            ))}
+          </div>
+        </div>
       </div>
     </section>
-  )
+  );
 }

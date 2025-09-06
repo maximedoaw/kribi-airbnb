@@ -15,11 +15,6 @@ const faqs = [
       "Nous acceptons les virements bancaires, Mobile Money (MTN, Orange), et les paiements en espèces sur place.",
   },
   {
-    question: "Y a-t-il des services supplémentaires disponibles ?",
-    answer:
-      "Oui, nous proposons le transfert aéroport, la conciergerie, le ménage quotidien et l'organisation d'excursions touristiques.",
-  },
-  {
     question: "Quelle est la politique d'annulation ?",
     answer:
       "Annulation gratuite jusqu'à 48h avant l'arrivée. Au-delà, l'acompte reste acquis mais peut être reporté sur une future réservation.",

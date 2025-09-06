@@ -17,7 +17,7 @@ export default function AuthScreen() {
   const [showEmailForm, setShowEmailForm] = useState(false)
 
   const handleWhatsAppContact = () => {
-    window.open("https://wa.me/237600000000?text=Bonjour, je suis intéressé par vos appartements à Kribi", "_blank")
+    window.open("https://wa.me/237659032254", "_blank")
   }
 
   return (

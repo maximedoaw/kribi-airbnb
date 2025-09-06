@@ -153,14 +153,6 @@ export function ReservationStepper() {
                 </Select>
               </div>
             </div>
-
-            <div className="bg-orange-50 p-4 rounded-lg border border-orange-200">
-              <h4 className="font-semibold text-orange-800 mb-2">💡 Conseil</h4>
-              <p className="text-sm text-orange-700">
-                Les appartements en bord de mer offrent une vue magnifique mais peuvent être plus chers. Le centre-ville
-                est idéal pour découvrir la culture locale.
-              </p>
-            </div>
           </div>
         )}
 

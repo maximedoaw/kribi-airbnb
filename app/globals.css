@@ -120,3 +120,39 @@
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes ocean-waves {
+  0% {
+    background-position: 0% 50%;
+    background-size: 200% 200%;
+  }
+  25% {
+    background-position: 50% 100%;
+    background-size: 250% 250%;
+  }
+  50% {
+    background-position: 100% 50%;
+    background-size: 200% 200%;
+  }
+  75% {
+    background-position: 50% 0%;
+    background-size: 250% 250%;
+  }
+  100% {
+    background-position: 0% 50%;
+    background-size: 200% 200%;
+  }
+}
+
+.animate-ocean-waves {
+  background: linear-gradient(
+    135deg,
+    #38bdf8 0%,    /* blue-400 */
+    #22d3ee 25%,   /* cyan-400 */
+    #2dd4bf 50%,   /* teal-400 */
+    #34d399 75%,   /* emerald-400 */
+    #22d3ee 100%   /* cyan-400 */
+  );
+  background-size: 400% 400%;
+  animation: ocean-waves 12s ease-in-out infinite;
+}
