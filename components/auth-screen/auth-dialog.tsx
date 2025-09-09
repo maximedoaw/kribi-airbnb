@@ -52,6 +52,7 @@ export function AuthDialog({ children }: AuthDialogProps) {
         const res = await createUserWithEmailAndPassword(emailInput, passwordInput)
         if (res?.user) {
           await setDoc(doc(db, 'users', res.user.uid), {
+            name:res.user.displayName || "Utilisateur",
             email: res.user.email,
             role: 'user',
             createdAt: serverTimestamp(),

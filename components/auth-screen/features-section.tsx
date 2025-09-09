@@ -51,7 +51,7 @@ export function FeaturesSection() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <Badge className="floating-badge mb-4 bg-orange-100 text-orange-700">🌍 Destination unique</Badge>
-          <h3 className="text-4xl font-bold text-foreground mb-6">Pourquoi choisir Kribi ?</h3>
+          <h3 className="text-4xl font-bold text-foreground mb-6">Pourquoi choisir  la Rose d'or a Kribi ?</h3>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             Kribi, ville côtière du Cameroun, vous offre des plages paradisiaques, une culture riche et une hospitalité
             légendaire dans un cadre tropical exceptionnel.

@@ -15,7 +15,7 @@ export default function BookingsPage() {
 
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-orange-200/50 p-8">
-      <BookingsTab bookings={bookings} />
+      <BookingsTab />
     </div>
   );
 }

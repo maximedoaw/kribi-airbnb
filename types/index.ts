@@ -27,3 +27,13 @@ export interface Payment {
     status: 'completed' | 'pending' | 'failed';
     bookingId: string;
 }
+
+export interface UserData {
+    uid: string;
+    displayName: string | null;
+    email: string | null;
+    role: string;
+    createdAt: any;
+    photoURL?: string | null;
+    phoneNumber?: string | null;
+}

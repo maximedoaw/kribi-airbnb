@@ -17,15 +17,18 @@ import {
   X,
   Anchor,
   Shell,
-  Fish
+  Fish,
+  Heart
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 
 const AppSidebar = () => {
   const pathname = usePathname();
   const router = useRouter();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [isDesktopCollapsed, setIsDesktopCollapsed] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const handleLogout = async () => {
@@ -37,6 +40,7 @@ const AppSidebar = () => {
       console.error('Erreur lors de la déconnexion:', error);
     } finally {
       setIsLoggingOut(false);
+      setIsMobileOpen(false);
     }
   };
 
@@ -52,9 +56,9 @@ const AppSidebar = () => {
       icon: Calendar,
     },
     {
-      href: '/catalog',
-      label: 'Catalogue',
-      icon: Store,
+      href: '/favorite',
+      label: 'Mes favoris',
+      icon: Heart,
     },
     {
       href: '/stats',
@@ -72,15 +76,15 @@ const AppSidebar = () => {
     return pathname === path;
   };
 
-  const SidebarContent = () => (
-    <div className="h-full bg-gradient-to-b from-cyan-500 via-blue-500 to-blue-800 relative overflow-hidden">
-      {/* Effets d'arrière-plan océaniques */}
-      <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/20 to-blue-900/40"></div>
+  const SidebarContent = ({ isCollapsed = false }: { isCollapsed?: boolean }) => (
+    <div className={`h-full bg-gradient-to-br from-cyan-500 via-blue-500 to-pink-600 relative overflow-hidden transition-all duration-500 ${isCollapsed ? 'w-20' : 'w-72'}`}>
+      {/* Effets d'arrière-plan avec dégradé rose/rouge */}
+      <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/20 via-blue-600/30 to-pink-500/40"></div>
       
-      {/* Vagues animées en arrière-plan */}
+      {/* Vagues animées en arrière-plan avec touches roses */}
       <div className="absolute bottom-0 left-0 right-0 h-32 opacity-30">
         <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1200 120" className="w-full h-20 fill-white/20">
+          <svg viewBox="0 0 1200 120" className="w-full h-20 fill-pink-400/20">
             <path d="M0,60 C150,100 350,0 600,60 C850,120 1050,20 1200,60 L1200,120 L0,120 Z">
               <animate attributeName="d" dur="4s" repeatCount="indefinite"
                 values="M0,60 C150,100 350,0 600,60 C850,120 1050,20 1200,60 L1200,120 L0,120 Z;
@@ -90,7 +94,7 @@ const AppSidebar = () => {
           </svg>
         </div>
         <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1200 120" className="w-full h-16 fill-white/10">
+          <svg viewBox="0 0 1200 120" className="w-full h-16 fill-cyan-400/10">
             <path d="M0,80 C300,120 600,40 900,80 C1050,100 1150,60 1200,80 L1200,120 L0,120 Z">
               <animate attributeName="d" dur="3s" repeatCount="indefinite"
                 values="M0,80 C300,120 600,40 900,80 C1050,100 1150,60 1200,80 L1200,120 L0,120 Z;
@@ -101,12 +105,12 @@ const AppSidebar = () => {
         </div>
       </div>
 
-      {/* Bulles flottantes */}
+      {/* Bulles flottantes avec certaines roses */}
       <div className="absolute inset-0 pointer-events-none">
-        {[...Array(8)].map((_, i) => (
+        {[...Array(12)].map((_, i) => (
           <div
             key={i}
-            className="absolute bg-white/20 rounded-full animate-float"
+            className={`absolute rounded-full animate-float ${i % 4 === 0 ? 'bg-pink-300/30' : 'bg-white/20'}`}
             style={{
               width: `${Math.random() * 12 + 4}px`,
               height: `${Math.random() * 12 + 4}px`,
@@ -119,23 +123,29 @@ const AppSidebar = () => {
         ))}
       </div>
 
-      {/* En-tête avec ancre marine */}
-      <div className="relative z-10 p-6 text-center border-b border-white/20">
+      {/* En-tête avec ancre marine et coeur rose */}
+      <div className={`relative z-10 p-6 text-center border-b border-white/20 transition-all duration-300 ${isCollapsed ? 'px-2' : ''}`}>
         <div className="flex items-center justify-center mb-2">
           <Anchor className="w-8 h-8 text-white mr-2" />
-          <Waves className="w-6 h-6 text-cyan-200" />
+          <Heart className="w-6 h-6 text-pink-300 animate-pulse" />
+          <Waves className="w-6 h-6 text-cyan-200 ml-2" />
         </div>
-        <h2 className="text-xl font-bold text-white tracking-wide">Rose Airbnb</h2>
-        <p className="text-cyan-100 text-sm font-medium">Kribi Ocean Resort</p>
-        <div className="flex items-center justify-center mt-2 space-x-1">
-          <Shell className="w-3 h-3 text-cyan-200" />
-          <Fish className="w-3 h-3 text-blue-200" />
-          <Shell className="w-3 h-3 text-cyan-200" />
-        </div>
+        {!isCollapsed && (
+          <>
+            <h2 className="text-xl font-bold text-white tracking-wide">LaRoseDor</h2>
+            <div className="flex items-center justify-center mt-2 space-x-1">
+              <Shell className="w-3 h-3 text-cyan-200" />
+              <div className="w-1 h-1 bg-pink-300 rounded-full" />
+              <Fish className="w-3 h-3 text-blue-200" />
+              <div className="w-1 h-1 bg-pink-300 rounded-full" />
+              <Shell className="w-3 h-3 text-cyan-200" />
+            </div>
+          </>
+        )}
       </div>
 
       {/* Navigation */}
-      <nav className="relative z-10 flex-1 p-4 space-y-2">
+      <nav className={`relative z-10 flex-1 p-4 space-y-2 ${isCollapsed ? 'px-2' : ''}`}>
         {menuItems.map((item) => {
           const Icon = item.icon;
           const active = isActive(item.href);
@@ -146,20 +156,27 @@ const AppSidebar = () => {
               href={item.href}
               onClick={() => setIsMobileOpen(false)}
               className={`
-                flex items-center px-4 py-3 rounded-xl transition-all duration-300 group relative overflow-hidden
+                flex items-center rounded-xl transition-all duration-300 group relative overflow-hidden
                 ${active 
-                  ? 'bg-white/25 text-white shadow-lg backdrop-blur-sm border border-white/30' 
-                  : 'text-cyan-50 hover:bg-white/15 hover:text-white'
+                  ? 'bg-gradient-to-r from-cyan-500/40 to-pink-500/40 text-white shadow-lg backdrop-blur-sm border border-white/30' 
+                  : 'text-cyan-50 hover:bg-gradient-to-r hover:from-cyan-500/20 hover:to-pink-500/20 hover:text-white'
                 }
+                ${isCollapsed ? 'justify-center p-3' : 'px-4 py-3'}
               `}
+              title={isCollapsed ? item.label : undefined}
             >
               {active && (
                 <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-xl" />
               )}
-              <Icon className={`w-5 h-5 mr-3 transition-transform group-hover:scale-110 ${active ? 'text-white' : 'text-cyan-100'}`} />
-              <span className="font-medium relative z-10">{item.label}</span>
-              {active && (
+              <Icon className={`transition-transform group-hover:scale-110 ${active ? 'text-white' : 'text-cyan-100'} ${isCollapsed ? 'w-6 h-6' : 'w-5 h-5 mr-3'}`} />
+              {!isCollapsed && (
+                <span className="font-medium relative z-10">{item.label}</span>
+              )}
+              {active && !isCollapsed && (
                 <div className="absolute right-3 w-2 h-2 bg-cyan-200 rounded-full animate-pulse" />
+              )}
+              {active && isCollapsed && (
+                <div className="absolute right-2 top-2 w-1.5 h-1.5 bg-pink-300 rounded-full animate-pulse" />
               )}
             </Link>
           );
@@ -167,49 +184,72 @@ const AppSidebar = () => {
       </nav>
 
       {/* Bouton de déconnexion */}
-      <div className="relative z-10 p-4 border-t border-white/20">
+      <div className={`relative z-10 p-4 border-t border-white/20 ${isCollapsed ? 'px-2' : ''}`}>
         <Button
           onClick={handleLogout}
           variant="destructive"
-          className="w-full bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white border-0 shadow-lg transition-all duration-300 hover:scale-105"
+          className={`bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white border-0 shadow-lg transition-all duration-300 hover:scale-105 ${isCollapsed ? 'w-12 h-12 p-0 justify-center' : 'w-full'}`}
+          title={isCollapsed ? "Déconnexion" : undefined}
         >
-          <LogOut className="w-4 h-4 mr-2" />
-          Déconnexion
+          <LogOut className={`${isCollapsed ? 'w-5 h-5' : 'w-4 h-4 mr-2'}`} />
+          {!isCollapsed && "Déconnexion"}
         </Button>
       </div>
 
-      {/* Effet de profondeur en bas */}
-      <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-blue-900/50 to-transparent" />
+      {/* Bouton pour réduire/agrandir sur desktop */}
+      {!isCollapsed && (
+        <button
+          onClick={() => setIsDesktopCollapsed(true)}
+          className="absolute top-4 -right-3 w-6 h-6 bg-gradient-to-r from-cyan-500 to-pink-500 rounded-full flex items-center justify-center text-white shadow-lg hover:scale-110 transition-transform duration-300 z-20"
+          title="Réduire le menu"
+        >
+          <X className="w-3 h-3" />
+        </button>
+      )}
+      
+      {isCollapsed && (
+        <button
+          onClick={() => setIsDesktopCollapsed(false)}
+          className="absolute top-4 -right-3 w-6 h-6 bg-gradient-to-r from-cyan-500 to-pink-500 rounded-full flex items-center justify-center text-white shadow-lg hover:scale-110 transition-transform duration-300 z-20"
+          title="Agrandir le menu"
+        >
+          <Menu className="w-3 h-3" />
+        </button>
+      )}
+
+      {/* Effet de profondeur en bas avec dégradé rose */}
+      <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-blue-900/50 via-pink-900/30 to-transparent" />
     </div>
   );
 
   return (
     <>
       {/* Desktop Sidebar */}
-      <div className="hidden lg:flex w-72 h-screen fixed left-0 top-0 z-50">
-        <div className="w-full h-full flex flex-col">
-          <SidebarContent />
-        </div>
+      <div className="hidden lg:flex h-screen fixed left-0 top-0 z-50 transition-all duration-500">
+        <SidebarContent isCollapsed={isDesktopCollapsed} />
       </div>
 
-      {/* Mobile Menu Button */}
+      {/* Mobile Menu */}
       <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
         <SheetTrigger asChild>
           <Button 
             variant="outline" 
             size="icon"
-            className="lg:hidden fixed top-4 left-4 z-50 bg-white/90 backdrop-blur-sm border-cyan-200 hover:bg-cyan-50 shadow-lg"
+            className="lg:hidden fixed top-4 left-4 z-50 bg-gradient-to-r from-cyan-500/90 to-pink-500/90 text-white border-0 shadow-lg hover:from-cyan-600 hover:to-pink-600"
           >
-            <Menu className="h-4 w-4 text-cyan-600" />
+            <Menu className="h-5 w-5" />
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="p-0 w-80">
+        <SheetContent side="left" className="p-0 w-80 max-w-full">
+          <VisuallyHidden>
+            <SheetTitle>Menu de navigation</SheetTitle>
+          </VisuallyHidden>
           <SidebarContent />
         </SheetContent>
       </Sheet>
 
       {/* Spacer pour desktop */}
-      <div className="hidden lg:block w-72 flex-shrink-0" />
+      <div className={`hidden lg:block transition-all duration-500 ${isDesktopCollapsed ? 'w-20' : 'w-72'}`} />
 
       {/* Styles CSS personnalisés */}
       <style jsx>{`
@@ -223,6 +263,9 @@ const AppSidebar = () => {
           66% {
             transform: translateY(-5px) rotate(-1deg);
           }
+        }
+        .animate-float {
+          animation: float 6s ease-in-out infinite;
         }
       `}</style>
     </>
