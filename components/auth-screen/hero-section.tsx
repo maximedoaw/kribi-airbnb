@@ -12,7 +12,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { Mail, MessageCircle, Search, CalendarIcon } from "lucide-react"
 import { format } from "date-fns"
 import { fr } from "date-fns/locale"
-import { AuthDialog } from "@/components/auth-screen/auth-dialog"
+import { AuthDialog } from "./auth-dialog"
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger)

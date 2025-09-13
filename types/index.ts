@@ -1,12 +1,17 @@
+// types.ts
 export interface Apartment {
     id: string;
     title: string;
     description: string;
-    price: number;
+    price: number; 
     location: string;
-    images: string[];
+    images: string[]; // Changé de image? à images[]
     available: boolean;
     rating: number;
+    likes: number;
+    likedBy: string[];
+    createdAt: Date;
+    updatedAt: Date;
 }
   
 export interface Booking {

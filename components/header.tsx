@@ -13,7 +13,7 @@ export function Header() {
             <MapPin className="h-5 w-5 text-white" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-foreground">Kribi Apartments</h1>
+            <h1 className="text-xl font-bold text-foreground">LaRoseDor</h1>
             <p className="text-xs text-muted-foreground">Perle du Cameroun</p>
           </div>
         </div>

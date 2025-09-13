@@ -9,8 +9,8 @@ import DashboardTab from './dashboard-tab';
 import BookingsTab from './bookings-tab';
 import CatalogTab from './catalog-tab';
 import StatsTab from './stats-tab';
-import AdminTab from './admin-tab';
 import BeachLoader from '@/components/beach-loader';
+import AdminView from '../admin-view';
 
 const HomeScreen = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -22,15 +22,15 @@ const HomeScreen = () => {
   const renderTab = () => {
     switch (activeTab) {
       case 'dashboard':
-        return <DashboardTab bookings={bookings} payments={payments} currentUser={currentUser} />;
+        return <DashboardTab currentUser={currentUser}/>;
       case 'bookings':
-        return <BookingsTab bookings={bookings} />;
+        return <BookingsTab />;
       case 'catalog':
         return <CatalogTab apartments={apartments} />;
       case 'stats':
         return <StatsTab payments={payments} bookings={bookings} />;
       case 'admin':
-        return <AdminTab apartments={apartments} bookings={bookings} payments={payments} />;
+        return <AdminView />;
       default:
         return <DashboardTab bookings={bookings} payments={payments} currentUser={currentUser} />;
     }

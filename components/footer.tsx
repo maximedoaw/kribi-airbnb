@@ -14,7 +14,7 @@ export function Footer() {
                 <MapPin className="h-5 w-5 text-white" />
               </div>
               <div>
-                <h5 className="font-bold text-xl">Kribi Apartments</h5>
+                <h5 className="font-bold text-xl">LaRoseDor</h5>
                 <p className="text-sm text-gray-300">Perle du Cameroun</p>
               </div>
             </div>
@@ -67,7 +67,7 @@ export function Footer() {
         <Separator className="bg-gray-700 mb-8" />
 
         <div className="flex flex-col md:flex-row justify-between items-center text-gray-400">
-          <p>&copy; 2024 Kribi Apartments. Tous droits réservés.</p>
+          <p>&copy; 2024 LaRoseDor. Tous droits réservés.</p>
           <div className="flex gap-6 mt-4 md:mt-0">
             <span className="hover:text-orange-400 transition-colors cursor-pointer">Mentions légales</span>
             <span className="hover:text-orange-400 transition-colors cursor-pointer">Plan du site</span>
