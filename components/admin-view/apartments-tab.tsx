@@ -8,10 +8,10 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Edit, Trash2, ToggleLeft, ToggleRight, Search, Filter } from "lucide-react"
-import type { Apartment } from "@/types/apartment"
+import type { Apartment } from "@/types"
 import { ConfirmationDialog } from "./confirmation-dialog"
 import { ApartmentFormDialog } from "./apartment-form-dialog"
-import { ImageCarousel } from "./image-carousel"
+import { ImageCarousel } from "../image-carousel"
 
 interface ApartmentsTabProps {
   apartments: Apartment[]

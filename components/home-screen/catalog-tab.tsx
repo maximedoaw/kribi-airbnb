@@ -30,7 +30,7 @@ const CatalogTab: React.FC<CatalogTabProps> = ({ apartments }) => {
             <div className="p-4">
               <h3 className="text-lg font-medium text-gray-800 mb-2">{apartment.title}</h3>
               <p className="text-gray-600 mb-3">{apartment.location}</p>
-              <p className="text-xl font-bold text-orange-600 mb-3">{apartment.price} €/nuit</p>
+              <p className="text-xl font-bold text-orange-600 mb-3">{apartment.price} FCFA/nuit</p>
               
               <div className="flex items-center mb-4">
                 <div className="flex">

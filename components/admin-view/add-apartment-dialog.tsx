@@ -18,7 +18,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { AlertCircle } from "lucide-react";
-import type { Apartment } from "@/types/apartment";
+import type { Apartment } from "@/types";
 
 interface AddApartmentDialogProps {
   onAddApartment: (

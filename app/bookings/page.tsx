@@ -7,7 +7,7 @@ import { useBookings } from '@/hooks/use-bookings';
 
 export default function BookingsPage() {
   const { currentUser, loading: authLoading } = useAuth();
-  const { bookings, loading: bookingsLoading } = useBookings(currentUser?.uid);
+  const { bookings, loading: bookingsLoading } = useBookings();
 
   if (authLoading || bookingsLoading) {
     return <BeachLoader/>

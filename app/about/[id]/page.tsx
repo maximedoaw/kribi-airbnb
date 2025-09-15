@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import type { Apartment } from "@/types/apartment";
+import type { Apartment } from "@/types";
 import KribiAnimations from '@/components/kribi-animations';
 import ApartmentDetails from '@/components/home-screen/apartment-details';
 

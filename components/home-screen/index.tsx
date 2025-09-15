@@ -32,7 +32,7 @@ const HomeScreen = () => {
       case 'admin':
         return <AdminView />;
       default:
-        return <DashboardTab bookings={bookings} payments={payments} currentUser={currentUser} />;
+        return <DashboardTab currentUser={currentUser} />;
     }
   };
 

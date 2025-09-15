@@ -1,6 +1,6 @@
 "use client"
 
-import type { Apartment, ApartmentFormData } from "@/types/apartment"
+import type { Apartment, ApartmentFormData } from "@/types"
 import { useState, useEffect } from "react"
 import {
   collection,
